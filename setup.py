@@ -19,7 +19,7 @@ setup(
     url='https://github.com/kylepollina/topo2geo',
     author='Kyle Pollina',
     author_email='kylepollina@pm.me',
-    license='MIT',
+    license='',
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
