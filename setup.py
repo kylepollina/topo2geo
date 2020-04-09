@@ -27,7 +27,7 @@ setup(
     ],
     packages=['topo2geo'],
     include_package_data=True,
-    install_requires=['click'],
+    install_requires=['click', 'shapely'],
     entry_points={
         'console_scripts': [
             'topo2geo=topo2geo.core:main'
