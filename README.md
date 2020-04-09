@@ -9,7 +9,7 @@ CLI for converting TopoJSON files to GeoJSON
 pip install topo2geo
 ```
 
-Depends on [shapely](https://pypi.org/project/Shapely/)
+Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi.org/project/click/)
 
 ### Usage
 
