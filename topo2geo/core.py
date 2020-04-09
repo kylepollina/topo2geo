@@ -1,3 +1,15 @@
+"""
+topo2geo/core.py
+
+Authors:
+    Sean Gillies
+    Matthew Perry
+    Kyle Pollina
+
+Sources:
+    https://gist.github.com/perrygeo/1e767e42e8bc54ad7262
+    https://github.com/sgillies/topojson/blob/master/topojson.py
+"""
 
 import os
 import json
