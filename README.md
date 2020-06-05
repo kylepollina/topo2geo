@@ -1,5 +1,5 @@
 
-# topo2json
+# topo2geo
 
 CLI for converting TopoJSON files to GeoJSON
 
