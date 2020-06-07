@@ -29,6 +29,9 @@ CONTEXT_SETTINGS = {
 def main(input_file, output_file):
     """
     CLI tool to convert TopoJSON to GeoJSON
+
+    Example:
+        topo2geo input.topojson output.geojson
     """
     if os.path.exists(input_file) is False:
         print(f'Error: Input file {input_file} does not exist.')
