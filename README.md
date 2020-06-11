@@ -17,6 +17,25 @@ Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi
 [~]$ topo2geo input_topo.json output_geo.json
 ```
 
+### Multilayered Topojsons
+If the topojson contains mulitple layers (i.e. there are multiple values in the "objects" key). Then seperate geojson files will be output prefixed with the layer name. 
+
+For example a topojson containing states and counties:
+{
+    "type": "Topology",
+    "objects": {
+        "county": {
+            "type": "GeometryCollection",
+            .....
+                  },
+        "state": {
+            "type": "GeometryCollection",
+            .....
+                  }
+               }
+}
+would produce two geojson files, county_output_geo.json and state_output_geo.json.
+
 ### Troubleshooting
 If you experience a "segmentation fault" one thing to try is explained [here](https://pypi.org/project/Shapely/):
 ```
