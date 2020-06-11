@@ -37,9 +37,14 @@ def main(input_file, output_file):
     geojson_layers = to_geojson(input_file)
 
     for layer, geojson in geojson_layers.items():
+        if len(geojson_layers.keys()) > 1:
+            geojson_fn = f'{layer}_{output_file}'
+        else:
+            geojson_fn = output_file
+
         try:
-            with open(f'{layer}_{output_file}', 'w+') as dest:
-                dest.write(json.dumps(geojson))
+            with open(geojson_fn, 'w+') as dest:
+                dest.write(json.dumps(geojson, indent=4))
         except AssertionError:
             print('Error: Invalid TopoJSON')
         except ValueError as e:
@@ -119,7 +124,7 @@ def to_geojson(topojson_path):
     scale = topology['transform']['scale']
     translate = topology['transform']['translate']
 
-    seperate_layers = {}
+    geojson_layers = {}
     for layer in layers:
         features = topology['objects'][layer]['geometries']
 
@@ -139,6 +144,6 @@ def to_geojson(topojson_path):
 
             fc['features'].append(f)
 
-        seperate_layers[layer] = fc
+        geojson_layers[layer] = fc
 
-    return seperate_layers
+    return geojson_layers
