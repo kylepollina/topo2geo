@@ -34,17 +34,19 @@ def main(input_file, output_file):
         print(f'Error: Input file {input_file} does not exist.')
         return
 
-    try:
-        geojson = to_geojson(input_file)
-        with open(output_file, 'w+') as dest:
-            dest.write(json.dumps(geojson))
-    except AssertionError:
-        print('Error: Invalid TopoJSON')
-    except ValueError as e:
-        print('Error: Invalid TopoJSON')
-        print(f'{e}')
-    except IOError:
-        print('Error: Issue reading file')
+    geojson_layers = to_geojson(input_file)
+
+    for layer, geojson in geojson_layers.items():
+        try:
+            with open(f'{layer}_{output_file}', 'w+') as dest:
+                dest.write(json.dumps(geojson))
+        except AssertionError:
+            print('Error: Invalid TopoJSON')
+        except ValueError as e:
+            print('Error: Invalid TopoJSON')
+            print(f'{e}')
+        except IOError:
+            print('Error: Issue reading file')
 
 
 def geometry(obj, topology_arcs, scale=None, translate=None):
@@ -113,26 +115,30 @@ def to_geojson(topojson_path):
         f = fh.read()
         topology = json.loads(f)
 
-    layername = list(topology['objects'].keys())[0]
-
-    features = topology['objects'][layername]['geometries']
+    layers = list(topology['objects'].keys())
     scale = topology['transform']['scale']
     translate = topology['transform']['translate']
 
-    fc = {'type': "FeatureCollection", 'features': []}
+    seperate_layers = {}
+    for layer in layers:
+        features = topology['objects'][layer]['geometries']
 
-    for index, feature in enumerate(features):
-        if feature.get('id'):
-            index = feature.get('id')
+        fc = {'type': "FeatureCollection", 'features': []}
 
-        f = {'id': index, 'type': "Feature"}
-        f['properties'] = feature['properties'].copy()
+        for index, feature in enumerate(features):
+            if feature.get('id'):
+                index = feature.get('id')
 
-        geommap = geometry(feature, topology['arcs'], scale, translate)
-        geom = asShape(geommap).buffer(0)
-        assert geom.is_valid
-        f['geometry'] = geom.__geo_interface__
+            f = {'id': index, 'type': "Feature"}
+            f['properties'] = feature['properties'].copy()
 
-        fc['features'].append(f)
+            geommap = geometry(feature, topology['arcs'], scale, translate)
+            geom = asShape(geommap).buffer(0)
+            assert geom.is_valid
+            f['geometry'] = geom.__geo_interface__
 
-    return fc
+            fc['features'].append(f)
+
+        seperate_layers[layer] = fc
+
+    return seperate_layers
