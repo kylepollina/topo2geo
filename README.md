@@ -17,6 +17,11 @@ Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi
 [~]$ topo2geo input.topojson output.geojson
 ```
 
+### Troubleshooting
+If you experience a "segmentation fault" one thing to try is explained [here](https://pypi.org/project/Shapely/):
+```
+pip install shapely --no-binary shapely         
+```
 ### Credits
 Originally written by [sgillies](https://github.com/sgillies) and [perrygeo](https://github.com/perrygeo). Converted to Python3 and packaged into a CLI by [kylepollina](https://github.com/kylepollina).
 

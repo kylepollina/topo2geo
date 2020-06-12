@@ -125,6 +125,9 @@ def to_geojson(topojson_path):
     fc = {'type': "FeatureCollection", 'features': []}
 
     for index, feature in enumerate(features):
+        if feature.get('id'):
+            index = feature.get('id')
+
         f = {'id': index, 'type': "Feature"}
         f['properties'] = feature['properties'].copy()
 
