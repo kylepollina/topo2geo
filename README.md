@@ -18,7 +18,7 @@ Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi
 ```
 
 ### Multilayered Topojsons
-If the topojson contains mulitple layers (i.e. there are multiple values in the "objects" key). Then seperate geojson files will be output prefixed with the layer name. 
+If the topojson contains mulitple layers (i.e. there are multiple values in the "objects" key). Then seperate geojson files will be output with the layer name. 
 
 For example a topojson containing states and counties:
 {
@@ -34,7 +34,7 @@ For example a topojson containing states and counties:
                   }
                }
 }
-would produce two geojson files, county_output_geo.json and state_output_geo.json.
+would produce two geojson files, output_geo_county.json and output_geo_state.json.
 
 ### Troubleshooting
 If you experience a "segmentation fault" one thing to try is explained [here](https://pypi.org/project/Shapely/):
