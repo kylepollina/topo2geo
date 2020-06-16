@@ -36,9 +36,11 @@ def main(input_file, output_file):
 
     geojson_layers = to_geojson(input_file)
 
+    output_filename, output_extension = os.path.splitext(output_file)
+
     for layer, geojson in geojson_layers.items():
         if len(geojson_layers.keys()) > 1:
-            geojson_fn = f'{layer}_{output_file}'
+            geojson_fn = f'{output_filename}_{layer}{output_extension}'
         else:
             geojson_fn = output_file
 
