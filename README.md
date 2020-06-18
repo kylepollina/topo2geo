@@ -21,26 +21,29 @@ Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi
 If the topojson contains mulitple layers (i.e. there are multiple values in the "objects" key). Then seperate geojson files will be output with the layer name. 
 
 For example a topojson containing states and counties:
+```
 {
     "type": "Topology",
     "objects": {
         "county": {
             "type": "GeometryCollection",
-            .....
-                  },
+            "geometries": [...]
+        },
         "state": {
             "type": "GeometryCollection",
-            .....
-                  }
-               }
+            "geometries": [...]
+        }
+    }
 }
-would produce two geojson files, output_geo_county.json and output_geo_state.json.
+```
+would produce two geojson files, `output_geo_county.json` and `output_geo_state.json`
 
 ### Troubleshooting
 If you experience a "segmentation fault" one thing to try is explained [here](https://pypi.org/project/Shapely/):
 ```
 pip install shapely --no-binary shapely
 ```
+
 ### Credits
 Originally written by [sgillies](https://github.com/sgillies) and [perrygeo](https://github.com/perrygeo). Converted to Python3 and packaged into a CLI by [kylepollina](https://github.com/kylepollina).
 
@@ -50,4 +53,4 @@ Sources:
 
 -------
 
-[License](https://github.com/topojson/topojson/blob/master/LICENSE.md)
+License - https://github.com/topojson/topojson/blob/master/LICENSE.md
