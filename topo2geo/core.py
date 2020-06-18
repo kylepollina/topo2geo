@@ -38,7 +38,7 @@ def main(input_file, output_file):
     """
     try:
         topo2geo(input_file, output_file)
-    except Exception as e:
+    except Exception:
         import traceback
         tb = traceback.format_exc()
         print(tb)
@@ -46,7 +46,7 @@ def main(input_file, output_file):
         print('There was an error. If you want to make this tool better, please create an issue at https://github.com/kylepollina/topo2geo')
         print('thanks =]')
 
-def topo2geo(input_file, output_file) -> None:
+def topo2geo(input_file: str, output_file: str) -> None:
     if os.path.exists(input_file) is False:
         print(f'Error: Input file {input_file} does not exist.')
         return
@@ -73,7 +73,7 @@ def topo2geo(input_file, output_file) -> None:
             print('Error: Issue reading file')
 
 
-def to_geojson(topojson_path):
+def to_geojson(topojson_path: str) -> dict:
     """Convert the data in topojson_path to GeoJSON"""
     with open(topojson_path, 'r') as fh:
         f = fh.read()
@@ -108,7 +108,7 @@ def to_geojson(topojson_path):
     return geojson_layers
 
 
-def geometry(obj, topology_arcs, scale=None, translate=None):
+def geometry(obj, topology_arcs, scale=None, translate=None) -> dict:
     """Converts a topology object to a geometry object.
 
     The topology object is a dict with 'type' and 'arcs' items, such as
@@ -119,10 +119,12 @@ def geometry(obj, topology_arcs, scale=None, translate=None):
     return {
         "type": obj['type'],
         "coordinates": coordinates(
-            obj['arcs'], topology_arcs, scale, translate)}
+            obj['arcs'], topology_arcs, scale, translate
+        )
+    }
 
 
-def coordinates(arcs, topology_arcs, scale=None, translate=None):
+def coordinates(arcs, topology_arcs, scale=None, translate=None) -> list:
     """Return GeoJSON coordinates for the sequence(s) of arcs.
 
     The arcs parameter may be a sequence of ints, each the index of a
