@@ -11,12 +11,15 @@ Sources:
     https://github.com/sgillies/topojson/blob/master/topojson.py
 """
 
+
 import os
 import json
 from itertools import chain
 
 import click
 from shapely.geometry import asShape
+
+from . import version as VERSION
 
 CONTEXT_SETTINGS = {
     'help_option_names': ['-h', '--help']
@@ -33,6 +36,17 @@ def main(input_file, output_file):
     Example:
         topo2geo input.topojson output.geojson
     """
+    try:
+        topo2geo(input_file, output_file)
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print(tb)
+        print(f'topo2geo version: {VERSION}')
+        print('There was an error. If you want to make this tool better, please create an issue at https://github.com/kylepollina/topo2geo')
+        print('thanks =]')
+
+def topo2geo(input_file, output_file) -> None:
     if os.path.exists(input_file) is False:
         print(f'Error: Input file {input_file} does not exist.')
         return
@@ -57,6 +71,41 @@ def main(input_file, output_file):
             print(f'{e}')
         except IOError:
             print('Error: Issue reading file')
+
+
+def to_geojson(topojson_path):
+    """Convert the data in topojson_path to GeoJSON"""
+    with open(topojson_path, 'r') as fh:
+        f = fh.read()
+        topology = json.loads(f)
+
+    layers = list(topology['objects'].keys())
+    scale = topology['transform']['scale']
+    translate = topology['transform']['translate']
+
+    geojson_layers = {}
+    for layer in layers:
+        features = topology['objects'][layer]['geometries']
+
+        fc = {'type': "FeatureCollection", 'features': []}
+
+        for index, feature in enumerate(features):
+            if feature.get('id'):
+                index = feature.get('id')
+
+            f = {'id': index, 'type': "Feature"}
+            f['properties'] = feature['properties'].copy()
+
+            geommap = geometry(feature, topology['arcs'], scale, translate)
+            geom = asShape(geommap).buffer(0)
+            assert geom.is_valid
+            f['geometry'] = geom.__geo_interface__
+
+            fc['features'].append(f)
+
+        geojson_layers[layer] = fc
+
+    return geojson_layers
 
 
 def geometry(obj, topology_arcs, scale=None, translate=None):
@@ -117,38 +166,3 @@ def rel2abs(arc, scale=None, translate=None):
     else:
         for x, y in arc:
             yield x, y
-
-
-def to_geojson(topojson_path):
-    """Convert the data in topojson_path to GeoJSON"""
-    with open(topojson_path, 'r') as fh:
-        f = fh.read()
-        topology = json.loads(f)
-
-    layers = list(topology['objects'].keys())
-    scale = topology['transform']['scale']
-    translate = topology['transform']['translate']
-
-    geojson_layers = {}
-    for layer in layers:
-        features = topology['objects'][layer]['geometries']
-
-        fc = {'type': "FeatureCollection", 'features': []}
-
-        for index, feature in enumerate(features):
-            if feature.get('id'):
-                index = feature.get('id')
-
-            f = {'id': index, 'type': "Feature"}
-            f['properties'] = feature['properties'].copy()
-
-            geommap = geometry(feature, topology['arcs'], scale, translate)
-            geom = asShape(geommap).buffer(0)
-            assert geom.is_valid
-            f['geometry'] = geom.__geo_interface__
-
-            fc['features'].append(f)
-
-        geojson_layers[layer] = fc
-
-    return geojson_layers
