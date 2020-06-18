@@ -36,12 +36,16 @@ def main(input_file, output_file):
         print('There was an error. If you want to make this tool better, please create an issue at https://github.com/kylepollina/topo2geo')
         print('thanks =]')
 
+
 def topo2geo(input_file: str, output_file: str) -> None:
+    """Converts the TopoJSON in input_file to GeoJSON and writes to output_file"""
     if os.path.exists(input_file) is False:
         print(f'Error: Input file {input_file} does not exist.')
         return
+    with open(input_file, 'r') as f:
+        topology = json.loads(f.read())
 
-    geojson_layers = to_geojson(input_file)
+    geojson_layers = build_geojson_layers(topology)
 
     output_filename, output_extension = os.path.splitext(output_file)
 
@@ -54,6 +58,9 @@ def topo2geo(input_file: str, output_file: str) -> None:
         try:
             with open(geojson_fn, 'w+') as dest:
                 dest.write(json.dumps(geojson, indent=4))
+
+        # These should be raised in the build_geojson_layers() function
+        # if that function fails to produce valid geojson
         except AssertionError:
             print('Error: Invalid TopoJSON')
         except ValueError as e:
@@ -63,12 +70,8 @@ def topo2geo(input_file: str, output_file: str) -> None:
             print('Error: Issue reading file')
 
 
-def to_geojson(topojson_path: str) -> dict:
-    """Convert the data in topojson_path to GeoJSON"""
-    with open(topojson_path, 'r') as fh:
-        f = fh.read()
-        topology = json.loads(f)
-
+def build_geojson_layers(topology: dict) -> dict:
+    """Convert the data in the topology dict to GeoJSON"""
     layers = list(topology['objects'].keys())
     scale = topology['transform']['scale']
     translate = topology['transform']['translate']
