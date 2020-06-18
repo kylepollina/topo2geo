@@ -1,10 +1,10 @@
-import pathlib
+from pathlib import Path
 from setuptools import setup
 
 from topo2geo import version as VERSION
 
 # The directory containing this file
-HERE = pathlib.Path(__file__).parent
+HERE = Path(__file__).parent
 
 # The text of the README file
 README = (HERE / "README.md").read_text()
