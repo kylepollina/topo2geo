@@ -39,7 +39,7 @@ For example a topojson containing states and counties:
 would produce two geojson files, `output_geo_county.json` and `output_geo_state.json`
 
 ### Troubleshooting
-If you experience a "segmentation fault" one thing to try is explained [here](https://pypi.org/project/Shapely/):
+If you experience a "segmentation fault" one thing to try is explained [here](https://github.com/Toblerity/Shapely#source-distributions):
 ```
 pip install shapely --no-binary shapely
 ```
