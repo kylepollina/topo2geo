@@ -1,7 +1,7 @@
 
 # topo2geo
 
-CLI for converting TopoJSON files to GeoJSON
+CLI for converting [TopoJSON](https://en.wikipedia.org/wiki/GeoJSON#TopoJSON) files to [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON)
 
 ### Installation
 
