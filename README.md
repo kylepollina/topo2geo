@@ -14,7 +14,7 @@ Depends on [shapely](https://pypi.org/project/Shapely/) and [click](https://pypi
 ### Usage
 
 ```
-[~]$ topo2geo input.topojson output.geojson
+$ topo2geo input.topojson output.geojson
 ```
 
 ### Multilayered Topojsons
