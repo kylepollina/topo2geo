@@ -7,7 +7,7 @@ import json
 from itertools import chain
 
 import click
-from shapely.geometry import asShape
+from shapely.geometry import shape
 
 from . import version as VERSION
 
@@ -73,8 +73,15 @@ def topo2geo(input_file: str, output_file: str) -> None:
 def build_geojson_layers(topology: dict) -> dict:
     """Convert the data in the topology dict to GeoJSON"""
     layers = list(topology['objects'].keys())
-    scale = topology['transform']['scale']
-    translate = topology['transform']['translate']
+    if 'transform' in topology and 'scale' in topology['transform']:
+        scale = topology['transform']['scale']
+    else:
+        scale = None
+
+    if 'transform' in topology and 'translate' in topology['transform']:
+        translate = topology['transform']['translate']
+    else:
+        translate = None
 
     geojson_layers = {}
     for layer in layers:
@@ -90,7 +97,7 @@ def build_geojson_layers(topology: dict) -> dict:
             f['properties'] = feature['properties'].copy()
 
             geommap = geometry(feature, topology['arcs'], scale, translate)
-            geom = asShape(geommap).buffer(0)
+            geom = shape(geommap).buffer(0)
             assert geom.is_valid
             f['geometry'] = geom.__geo_interface__
 
